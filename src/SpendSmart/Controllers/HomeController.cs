@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using SpendSmart.Data;
 using SpendSmart.Models;
 
 namespace SpendSmart.Controllers;
@@ -8,9 +9,12 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    private readonly SpendSmartDbContext _context;
+
+    public HomeController(ILogger<HomeController> logger, SpendSmartDbContext context)
     {
         _logger = logger;
+        _context = context;
     }
 
     public IActionResult Index()
@@ -20,7 +24,8 @@ public class HomeController : Controller
 
     public IActionResult Expenses()
     {
-        return View();
+        var allExpenses = _context.Expenses.ToList();
+        return View(allExpenses);
     }
 
     public IActionResult CreateEditExpense()
@@ -31,6 +36,9 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult CreateEditExpense(Expense model)
     {
+        _context.Expenses.Add(model);
+        _context.SaveChanges();
+
         return RedirectToAction("Expenses");
     }
 
