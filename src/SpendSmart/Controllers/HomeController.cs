@@ -23,6 +23,17 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult CreateEditExpense()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult CreateEditExpense(Expense model)
+    {
+        return RedirectToAction("Expenses");
+    }
+
     public IActionResult Privacy()
     {
         return View();
